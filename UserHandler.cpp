@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstring>
+#include <Windows.h>
 #include "UserHandler.h"
-//#define LEN 50							User.hÀÇ LEN »ç¿ë
+#include "comn_exception.h"
+#define LEN 50
 
 using namespace std;
 
@@ -14,154 +16,166 @@ void UserHandler::AddUser(void)
 	char phone[LEN];
 	char major[LEN];
 	int select = 0;
-	
-	cout << "------------------------------------------------" << endl;
-	cout << "Á¤º¸ ÀÔ·Â" << endl;
-	cout << "ID: ";
-	cin >> id;
-	cout << "ÀÌ¸§: ";
-	cin >> name;
-	cout << "ºñ¹Ğ¹øÈ£: ";
-	cin >> password;
-	cout << "e-mail: ";
-	cin >> email;
-	cout << "ÀüÈ­¹øÈ£: ";
-	cin >> phone;
-	cout << "ÇĞ°ú: ";
-	cin >> major;
-	
-	if (CheckUser(id))
+
+	try
 	{
-		cout << "ÇØ´çµÇ´Â Á÷¾÷À» ¼±ÅÃÇØÁÖ¼¼¿ä." << endl;
-		cout << "1. ±³¼ö" << endl;
-		cout << "2. ÇĞ»ı" << endl;
-		cout << "¼±ÅÃ: ";
-		cin >> select;
-		
-		// ÀÌ °æ¿ì 1°ú 2ÀÇ ¼±ÅÃÁö¿¡ µû¶ó ¼öÇàµÇ´Â ¹®ÀåÀÌ ´Ù¸£¹Ç·Î
-		// try-catch¹®º¸´Ù if ¹®À» ÅëÇÑ ¿¹¿ÜÃ³¸®°¡ ´õ ÄÚµå°¡ °£´ÜÇÏ´Ù°í »ı°¢ÇÏ¿´À½
-		if (select == 1) {
-			userList[num++] = new professor(id, name, password, email, phone, major);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl; 
-			cout << "------------------------------------------------" << endl;
-		}
-		else if (select == 2) {
-			userList[num++] = new student(id, name, password, email, phone, major);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl; 
-			cout << "------------------------------------------------" << endl;
+		cout << "------------------------------------------------" << endl;
+		cout << "ì •ë³´ ì…ë ¥" << endl;
+		cout << "ID: ";
+		cin >> id;
+		checkConsoleInput();
+		cout << "ì´ë¦„: ";
+		cin >> name;
+		cout << "ë¹„ë°€ë²ˆí˜¸: ";
+		cin >> password;
+		cout << "e-mail: ";
+		cin >> email;
+		cout << "ì „í™”ë²ˆí˜¸: ";
+		cin >> phone;
+		cout << "í•™ê³¼: ";
+		cin >> major;
+
+		if (CheckUser(id))
+		{
+			cout << "í•´ë‹¹ë˜ëŠ” ì§ì—…ì„ ì„ íƒí•´ì£¼ì„¸ìš”." << endl;
+			cout << "1. êµìˆ˜" << endl;
+			cout << "2. í•™ìƒ" << endl;
+			cout << "ì„ íƒ: ";
+			cin >> select;
+
+			// ì´ ê²½ìš° 1ê³¼ 2ì˜ ì„ íƒì§€ì— ë”°ë¼ ìˆ˜í–‰ë˜ëŠ” ë¬¸ì¥ì´ ë‹¤ë¥´ë¯€ë¡œ
+			// try-catchë¬¸ë³´ë‹¤ if ë¬¸ì„ í†µí•œ ì˜ˆì™¸ì²˜ë¦¬ê°€ ë” ì½”ë“œê°€ ê°„ë‹¨í•˜ë‹¤ê³  ìƒê°í•˜ì˜€ìŒ
+			if (select == 1) {
+				userList[num++] = new professor(id, name, password, email, phone, major);
+				cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+				cout << "------------------------------------------------" << endl;
+			}
+			else if (select == 2) {
+				userList[num++] = new student(id, name, password, email, phone, major);
+				cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+				cout << "------------------------------------------------" << endl;
+			}
+			else
+			{
+				cout << "ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”." << endl;
+				cout << "------------------------------------------------" << endl;
+			}
 		}
 		else
 		{
-			cout << "Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä." << endl;
+			cout << "ì¤‘ë³µëœ í•™ë²ˆì´ ìˆìŠµë‹ˆë‹¤." << endl;
+			cout << "ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”." << endl;
 			cout << "------------------------------------------------" << endl;
 		}
 	}
-	else
+	catch (consoleInputFailException& e)
 	{
-		cout << "Áßº¹µÈ ÇĞ¹øÀÌ ÀÖ½À´Ï´Ù." << endl;
-		cout << "´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä." << endl;
-		cout << "------------------------------------------------" << endl;
+		e.clearBuffer();
+		e.showExceptionMessage();
 	}
 }
 
 bool UserHandler::CheckUser(int id)
 {
 	for (int i = 0; i < num; i++)
-		if (userList[i]->get_ID() == id)		// id¿Í ÀúÀåµÈ userList Áß ÀÏÄ¡ÇÏ´Â id (Áßº¹µÈ ¾ÆÀÌµğ) °¡ ÀÖ´ÂÁö È®ÀÎ 
+		if (userList[i]->get_ID() == id)		// idì™€ ì €ì¥ëœ userList ì¤‘ ì¼ì¹˜í•˜ëŠ” id (ì¤‘ë³µëœ ì•„ì´ë””) ê°€ ìˆëŠ”ì§€ í™•ì¸ 
 			return false;
 	return true;
 }
 
-void UserHandler::ChangeUser(void)
+void UserHandler::ChangeUser(user* curUser)
 {
 	int currentID;
 	char currentPassword[LEN];
 	user* currentUser;
 	int select;
 	char input[LEN];
-	
-	cout << "------------------------------------------------" << endl;
-	cout << "ÇöÀç ID ÀÔ·Â: ";
-	cin >> currentID;
-	cout << "ÇöÀç ºñ¹Ğ¹øÈ£ ÀÔ·Â: ";
-	cin >> currentPassword;
 
-	/* if¹®À» »ç¿ëÇÏ¿© ¿¹¿ÜÃ³¸®¸¦ ÇÏ´Â °æ¿ì 
-	if (SearchUser(currentID, currentPassword) == NULL) {			// ÇØ´ç ID¿Í ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â »ç¿ëÀÚ°¡ ¾ø´Â °æ¿ì
-		cout << "ÇØ´çÇÏ´Â »ç¿ëÀÚ°¡ ¾ø½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä." << endl;
+	cout << "------------------------------------------------" << endl;
+	/*
+	cout << "í˜„ì¬ ID ì…ë ¥: ";
+	cin >> currentID;
+	cout << "í˜„ì¬ ë¹„ë°€ë²ˆí˜¸ ì…ë ¥: ";
+	cin >> currentPassword;
+	*/
+
+	/* ifë¬¸ì„ ì‚¬ìš©í•˜ì—¬ ì˜ˆì™¸ì²˜ë¦¬ë¥¼ í•˜ëŠ” ê²½ìš°
+	if (SearchUser(currentID, currentPassword) == NULL) {			// í•´ë‹¹ IDì™€ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ëŠ” ê²½ìš°
+		cout << "í•´ë‹¹í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”." << endl;
 		cout << "--------------------------" << endl;
 		return;
 	}
 	*/
 
-	currentUser = SearchUser(currentID, currentPassword);
-	
-	// ¿¹¿ÜÃ³¸® :  ÇØ´ç ID¿Í ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â »ç¿ëÀÚ°¡ ¾ø´Â °æ¿ì
+	currentUser = curUser;
+
+	// ì˜ˆì™¸ì²˜ë¦¬ :  í•´ë‹¹ IDì™€ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ëŠ” ê²½ìš°
 	try
 	{
 		if (currentUser == NULL)
 			throw currentUser;
 	}
-	catch(user* expn)
+	catch (user* expn)
 	{
-		cout << "ÇØ´çÇÏ´Â »ç¿ëÀÚ°¡ ¾ø½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä." << endl;
+		cout << "í•´ë‹¹í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”." << endl;
 		cout << "------------------------------------------------" << endl;
 		return;
 	}
-	
+
 	cout << "------------------------------------------------" << endl;
-	cout << "ÇöÀç Á¤º¸" << endl;
+	cout << "í˜„ì¬ ì •ë³´" << endl;
 	cout << "ID: " << currentUser->get_ID() << endl;
-	cout << "ºñ¹Ğ¹øÈ£: " << currentUser->get_password() << endl;
-	cout << "ÀÌ¸ŞÀÏ: " << currentUser->get_mail() << endl;
-	cout << "ÀüÈ­¹øÈ£: " << currentUser->get_ph_num() << endl;
-	cout << "Àü°ø: " << currentUser->get_major() << endl;
-	
+	cout << "ë¹„ë°€ë²ˆí˜¸: " << currentUser->get_password() << endl;
+	cout << "ì´ë©”ì¼: " << currentUser->get_mail() << endl;
+	cout << "ì „í™”ë²ˆí˜¸: " << currentUser->get_ph_num() << endl;
+	cout << "ì „ê³µ: " << currentUser->get_major() << endl;
+
 	cout << "------------------------------------------------" << endl;
-	cout << "¼öÁ¤ÇÒ Á¤º¸ ¼±ÅÃ" << endl;
-	cout << "1. ºñ¹Ğ¹øÈ£" << endl;
-	cout << "2. ÀÌ¸ŞÀÏ" << endl;
-	cout << "3. ÀüÈ­¹øÈ£" << endl;
-	cout << "4. Àü°ø" << endl;
-	cout << "¼±ÅÃ: ";
+	cout << "ìˆ˜ì •í•  ì •ë³´ ì„ íƒ" << endl;
+	cout << "1. ë¹„ë°€ë²ˆí˜¸" << endl;
+	cout << "2. ì´ë©”ì¼" << endl;
+	cout << "3. ì „í™”ë²ˆí˜¸" << endl;
+	cout << "4. ì „ê³µ" << endl;
+	cout << "ì„ íƒ: ";
 	cin >> select;
-	cout << "º¯°æÇÒ Á¤º¸ ÀÔ·Â: ";
+	cout << "ë³€ê²½í•  ì •ë³´ ì…ë ¥: ";
 	cin >> input;
-	
-	// select¿¡ ÀúÀåµÈ °ª¿¡ µû¶ó ´Ù¸¥ ÄÚµå°¡ ¼öÇàµÇ±â ¶§¹®¿¡
-	// try-catch¹®º¸´Ù switch¹®ÀÇ default¸¦ ÅëÇÑ ¿¹¿ÜÃ³¸®°¡ ´õ ÀûÇÕÇÏ´Ù°í ÆÇ´ÜÇÔ 
-	switch(select)
+
+	// selectì— ì €ì¥ëœ ê°’ì— ë”°ë¼ ë‹¤ë¥¸ ì½”ë“œê°€ ìˆ˜í–‰ë˜ê¸° ë•Œë¬¸ì—
+	// try-catchë¬¸ë³´ë‹¤ switchë¬¸ì˜ defaultë¥¼ í†µí•œ ì˜ˆì™¸ì²˜ë¦¬ê°€ ë” ì í•©í•˜ë‹¤ê³  íŒë‹¨í•¨ 
+	system("cls");
+	switch (select)
 	{
-		case 1:
-			currentUser->change_password(input);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl;
-			cout << "------------------------------------------------" << endl;
-			break;
-		case 2:
-			currentUser->change_mail(input);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl;
-			cout << "------------------------------------------------" << endl;
-			break;
-		case 3:
-			currentUser->change_ph_num(input);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl;
-			cout << "------------------------------------------------" << endl;
-			break;
-		case 4:
-			currentUser->change_major(input);
-			cout << "¼º°øÀûÀ¸·Î ÀúÀåµÇ¾ú½À´Ï´Ù." << endl;
-			cout << "------------------------------------------------" << endl;
-			break;
-		default:
-			cout << "Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä." << endl;
-			cout << "------------------------------------------------" << endl;
+	case 1:
+		currentUser->change_password(input);
+		cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+		cout << "------------------------------------------------" << endl;
+		break;
+	case 2:
+		currentUser->change_mail(input);
+		cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+		cout << "------------------------------------------------" << endl;
+		break;
+	case 3:
+		currentUser->change_ph_num(input);
+		cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+		cout << "------------------------------------------------" << endl;
+		break;
+	case 4:
+		currentUser->change_major(input);
+		cout << "ì„±ê³µì ìœ¼ë¡œ ì €ì¥ë˜ì—ˆìŠµë‹ˆë‹¤." << endl;
+		cout << "------------------------------------------------" << endl;
+		break;
+	default:
+		cout << "ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”." << endl;
+		cout << "------------------------------------------------" << endl;
 	}
 }
 
 user* UserHandler::SearchUser(int id, char* password)
 {
 	for (int i = 0; i < num; i++)
-		if ((userList[i]->get_ID() == id) && !(strcmp(userList[i]->get_password(), password)))		// ÀÔ·ÂµÈ ID¿Í ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â ÀúÀåµÈ »ç¿ëÀÚ°¡ ÀÖ´ÂÁö È®ÀÎ 
+		if ((userList[i]->get_ID() == id) && !(strcmp(userList[i]->get_password(), password)))		// ì…ë ¥ëœ IDì™€ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ” ì €ì¥ëœ ì‚¬ìš©ìê°€ ìˆëŠ”ì§€ í™•ì¸ 
 			return userList[i];
 	return NULL;
 }
@@ -169,7 +183,7 @@ user* UserHandler::SearchUser(int id, char* password)
 user* UserHandler::SearchUser(int id)
 {
 	for (int i = 0; i < num; i++)
-		if (userList[i]->get_ID() == id)		// ÀÔ·ÂµÈ ID°¡ ÀÏÄ¡ÇÏ´Â ÀúÀåµÈ »ç¿ëÀÚ°¡ ÀÖ´ÂÁö È®ÀÎ 
+		if (userList[i]->get_ID() == id)		// ì…ë ¥ëœ IDê°€ ì¼ì¹˜í•˜ëŠ” ì €ì¥ëœ ì‚¬ìš©ìê°€ ìˆëŠ”ì§€ í™•ì¸ 
 			return userList[i];
 	return NULL;
 }
@@ -177,10 +191,12 @@ user* UserHandler::SearchUser(int id)
 UserHandler::~UserHandler(void)
 {
 	for (int i = 0; i < num; i++)
+	{
 		delete userList[i];
+	}
 }
 
-/* test 
+/* test
 int main(void)
 {
 	int id = 123456789;
@@ -189,9 +205,9 @@ int main(void)
 	strcpy(pw, pw1);
 	UserHandler userhandler;
 	userhandler.AddUser();
-	userhandler.AddUser();				// Áßº¹µÈ ID°¡ ÀÖ´Â °æ¿ì Å×½ºÆ®
+	userhandler.AddUser();				// ì¤‘ë³µëœ IDê°€ ìˆëŠ” ê²½ìš° í…ŒìŠ¤íŠ¸
 	userhandler.ChangeUser();
-	userhandler.ChangeUser();			// ÇØ´ç »ç¿ëÀÚ°¡ ¾ø´Â °æ¿ì Å×½ºÆ® 
+	userhandler.ChangeUser();			// í•´ë‹¹ ì‚¬ìš©ìê°€ ì—†ëŠ” ê²½ìš° í…ŒìŠ¤íŠ¸
 	return 0;
 }
 */
