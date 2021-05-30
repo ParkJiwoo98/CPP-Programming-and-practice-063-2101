@@ -1,5 +1,7 @@
 #include <iostream>
+#include <Windows.h>
 #include "UserHandler.h"
+#include "comn_exception.h"
 
 using namespace std;
 
@@ -10,13 +12,29 @@ user* loginOrJoin();
 
 int main(void)
 {
-	user* currentUser = NULL;
-	
-	while(currentUser == NULL)
-		currentUser = loginOrJoin();
-	
-	/* ·Î±×ÀÎ ÈÄ ÇÁ·Î±×·¥ ¼³°è */ 
-	
+	user* currentUser;
+	do
+	{
+		currentUser = NULL;
+
+		while (currentUser == NULL)
+		{
+			try
+			{
+				currentUser = loginOrJoin();
+			}
+			catch (consoleInputFailException& e)
+			{
+				e.clearBuffer();
+				system("cls");
+				e.showExceptionMessage();
+			}
+
+		}
+
+		/* ë¡œê·¸ì¸ í›„ í”„ë¡œê·¸ë¨ ì„¤ê³„ */
+	} while (1);
+
 	return 0;
 }
 
@@ -24,45 +42,47 @@ user* loginOrJoin(void)
 {
 	int select;
 	user* currentUser;
-	
-	cout << "------------------------------------------------" << endl;
-	cout << "ÇĞ»ı Áö¿ø ½Ã½ºÅÛ¿¡ ¿À½Å °ÍÀ» È¯¿µÇÕ´Ï´Ù." << endl;
-	cout << "¹«¾ùÀ» µµ¿Íµå¸±±î¿ä?" << endl;
-	cout << "1. ·Î±×ÀÎ" << endl;
-	cout << "2. È¸¿ø°¡ÀÔ" << endl;
-	cout << "3. ÇÁ·Î±×·¥ Á¾·á" << endl;
-	cout << "¼±ÅÃ: ";
+
+	cout << "------------------------------------------" << endl;
+	cout << "í•™ìƒ ì§€ì› ì‹œìŠ¤í…œì— ì˜¤ì‹  ê²ƒì„ í™˜ì˜í•©ë‹ˆë‹¤." << endl;
+	cout << "ë¬´ì—‡ì„ ë„ì™€ë“œë¦´ê¹Œìš”?" << endl;
+	cout << "1. ë¡œê·¸ì¸" << endl;
+	cout << "2. íšŒì›ê°€ì…" << endl;
+	cout << "3. í”„ë¡œê·¸ë¨ ì¢…ë£Œ" << endl;
+	cout << "ì„ íƒ: ";
 	cin >> select;
-	
-	switch(select)
+	checkConsoleInput();
+	system("cls");
+	switch (select)
 	{
-		case 1:
+	case 1:
+	{
+		currentUser = login();
+
+		// ì˜ˆì™¸ì²˜ë¦¬ :  í•´ë‹¹ IDì™€ ë¹„ë°€ë²ˆí˜¸ê°€ ì¼ì¹˜í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ëŠ” ê²½ìš°
+		try
 		{
-			currentUser = login();
-			
-			// ¿¹¿ÜÃ³¸® :  ÇØ´ç ID¿Í ºñ¹Ğ¹øÈ£°¡ ÀÏÄ¡ÇÏ´Â »ç¿ëÀÚ°¡ ¾ø´Â °æ¿ì
-			try
-			{
-				if (currentUser == NULL)
-					throw currentUser;
-			}
-			catch(user* expn)
-			{
-				cout << "ÇØ´çÇÏ´Â »ç¿ëÀÚ°¡ ¾ø½À´Ï´Ù. ´Ù½Ã ÀÔ·ÂÇØÁÖ¼¼¿ä." << endl;
-				cout << "------------------------------------------------" << endl;
-				return NULL;
-			}
-			cout << currentUser->get_name() << "´Ô, È¯¿µÇÕ´Ï´Ù." << endl;
-			return currentUser;
+			if (currentUser == NULL)
+				throw currentUser;
 		}
-		case 2:
-			userManager.AddUser();
-			return NULL;
-		case 3:
-			exit(0);
-		default:
-			cout << "Àß¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä." << endl;
+		catch (user* expn)
+		{
+			cout << "í•´ë‹¹í•˜ëŠ” ì‚¬ìš©ìê°€ ì—†ìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”." << endl;
 			cout << "------------------------------------------------" << endl;
+			return NULL;
+		}
+		system("cls");
+		cout << currentUser->get_name() << "ë‹˜, í™˜ì˜í•©ë‹ˆë‹¤." << endl;
+		return currentUser;
+	}
+	case 2:
+		userManager.AddUser();
+		return NULL;
+	case 3:
+		exit(0);
+	default:
+		cout << "ì˜ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤. ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”." << endl;
+		cout << "------------------------------------------------" << endl;
 	}
 	return NULL;
 }
@@ -72,14 +92,22 @@ user* login(void)
 	int id;
 	char password[LEN];
 	user* currentUser;
-	
-	cout << "------------------------------------------------" << endl;
-	cout << "ID: ";
-	cin >> id;
-	cout << "ºñ¹Ğ¹øÈ£: ";
-	cin >> password;
-	
-	currentUser = userManager.SearchUser(id, password);
-	
-	return currentUser;
+
+	try
+	{
+		cout << "------------------------------------------------" << endl;
+		cout << "ID: ";
+		cin >> id;
+		checkConsoleInput();
+		cout << "ë¹„ë°€ë²ˆí˜¸: ";
+		cin >> password;
+		currentUser = userManager.SearchUser(id, password);
+		return currentUser;
+	}
+	catch (consoleInputFailException& e)
+	{
+		e.clearBuffer();
+		e.showExceptionMessage();
+		return NULL;
+	}
 }
