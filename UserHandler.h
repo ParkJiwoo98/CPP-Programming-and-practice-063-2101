@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <cstring>
 #include "User.h"
@@ -5,15 +6,15 @@
 class UserHandler
 {
 private:
-	user* userList[200];						// »ç¿ëÀÚ ÀúÀå ¹è¿­ 
-	int num;									// »ç¿ëÀÚ Á¤º¸ ÀúÀå ¼ö
-	
-	bool CheckUser(int id);						// idÀÇ ÀúÀåµÈ »ç¿ëÀÚ°¡ ÀÖ´ÂÁö Ã¼Å©ÇÏ¿© ¹İÈ¯, AddUser¿¡¼­ »ç¿ëµÊ 
+	user* userList[200];						// ì‚¬ìš©ì ì €ì¥ ë°°ì—´ 
+	int num;									// ì‚¬ìš©ì ì •ë³´ ì €ì¥ ìˆ˜
+
+	bool CheckUser(int id);						// idì˜ ì €ì¥ëœ ì‚¬ìš©ìê°€ ìˆëŠ”ì§€ ì²´í¬í•˜ì—¬ ë°˜í™˜, AddUserì—ì„œ ì‚¬ìš©ë¨ 
 public:
 	UserHandler() : num(0) {};
-	void AddUser(void);							// È¸¿ø°¡ÀÔ ½Ã È£Ãâ
-	void ChangeUser(void);						// »ç¿ëÀÚ Á¤º¸ º¯°æ
-	user* SearchUser(int id, char* password);	// ÇØ´ç ID¿Í ºñ¹Ğ¹øÈ£¸¦ °¡Áø »ç¿ëÀÚ¸¦ ¹İÈ¯ 
-	user* SearchUser(int id);					// ÇØ´ç ID¸¦ °¡Áø »ç¿ëÀÚ¸¦ ¹İÈ¯ 
+	void AddUser(void);							// íšŒì›ê°€ì… ì‹œ í˜¸ì¶œ
+	void ChangeUser(user* curUser);						// ì‚¬ìš©ì ì •ë³´ ë³€ê²½
+	user* SearchUser(int id, char* password);	// í•´ë‹¹ IDì™€ ë¹„ë°€ë²ˆí˜¸ë¥¼ ê°€ì§„ ì‚¬ìš©ìë¥¼ ë°˜í™˜ 
+	user* SearchUser(int id);					// í•´ë‹¹ IDë¥¼ ê°€ì§„ ì‚¬ìš©ìë¥¼ ë°˜í™˜ 
 	~UserHandler();
 };
